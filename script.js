@@ -28,6 +28,13 @@ let count = 0;
 let color = "blue";
 let isMouseDown = false;
 let conteiner = document.createElement("div");
+let h = 0;
+
+if(larguraViewport < 450) {
+  setInterval(()=>{
+
+  }, 100)
+}
 
 for (let i = 0; i < linhas; i++) {
   grid[i] = [];
@@ -63,6 +70,16 @@ function getRandomColor() {
   const b = Math.floor(Math.random() * 256);
 
   const cssColorString = `rgb(${r}, ${g}, ${b})`;
+
+  color = cssColorString;
+}
+
+function getLinearColor() {
+  h = h + 1;
+
+  h === 1? h=0: h;
+
+  const cssColorString = `hsi(${h}, 100%, 100%)`;
 
   color = cssColorString;
 }
@@ -136,20 +153,12 @@ function verificar(grao, intervalID, cont) {
 }
 
 window.onload = function () {
-
-  if (window.PointerEvent) {
-    console.log("Pointer Events is supported!");
-    // Use o código da API Pointer Events aqui
-  } else {
-    console.log("Pointer Events is not supported.");
-    // Use métodos alternativos para obter a posição do mouse (ex: eventos de mouse)
-  }
   conteiner.setAttribute("class", "conteiner");
   document.body.appendChild(conteiner);
 
   let intervalID;
 
-  document.addEventListener("mousedown", (event) => {
+  document.addEventListener("pointerdown", (event) => {
     mouseX = event.clientX;
     mouseY = event.clientY;
     clearInterval(intervalID);
@@ -157,11 +166,11 @@ window.onload = function () {
     intervalID = setInterval(() => trackMouse(conteiner), 5);
   });
 
-  document.addEventListener("mouseup", () => {
+  document.addEventListener("pointerup", () => {
     clearInterval(intervalID);
   });
 
-  document.addEventListener("mousemove", (event) => {
+  document.addEventListener("pointermove", (event) => {
     mouseX = event.clientX;
     mouseY = event.clientY;
   });
