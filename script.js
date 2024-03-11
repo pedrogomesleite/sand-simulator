@@ -28,13 +28,6 @@ let count = 0;
 let color = "blue";
 let isMouseDown = false;
 let conteiner = document.createElement("div");
-let h = 0;
-
-if(larguraViewport < 450) {
-  setInterval(()=>{
-
-  }, 100)
-}
 
 for (let i = 0; i < linhas; i++) {
   grid[i] = [];
@@ -74,12 +67,36 @@ function getRandomColor() {
   color = cssColorString;
 }
 
+let colorsGrid = [];
+
+function getAllRgbColors() {
+
+  for(let b = 0; b <= 255; b++) {
+    colorsGrid.push(`rgb(255, 0, ${b})`);
+  }
+  for(let r = 255; r >= 0; r--) {
+    colorsGrid.push(`rgb(${r}, 0, 255)`);
+  }
+  for(let g = 0; g <= 255; g++) {
+    colorsGrid.push(`rgb(0, ${g}, 255)`);
+  }
+  for(let b = 255; b >= 0; b--) {
+    colorsGrid.push(`rgb(0, 255, ${b})`);
+  }
+  for(let r = 0; r <= 255; r++) {
+    colorsGrid.push(`rgb(${r}, 255, 0)`);
+  }
+  for(let g = 255; g >= 0; g--) {
+    colorsGrid.push(`rgb(255, ${g}, 0)`);
+  }
+}
+
+let h = 0;
+
 function getLinearColor() {
-  h = h + 1;
+  h = (h + 1) % colorsGrid.length;
 
-  h === 1? h=0: h;
-
-  const cssColorString = `hsi(${h}, 100%, 100%)`;
+  const cssColorString = colorsGrid[h];
 
   color = cssColorString;
 }
@@ -153,8 +170,13 @@ function verificar(grao, intervalID, cont) {
 }
 
 window.onload = function () {
+  getAllRgbColors();
   conteiner.setAttribute("class", "conteiner");
   document.body.appendChild(conteiner);
+
+  if(larguraViewport < 1300) {
+    setInterval(getLinearColor, 25);
+  }  
 
   let intervalID;
 
@@ -173,6 +195,18 @@ window.onload = function () {
   document.addEventListener("pointermove", (event) => {
     mouseX = event.clientX;
     mouseY = event.clientY;
+    console.log(`${mouseX}, ${mouseY}`);
+  });
+
+  document.addEventListener("touchmove", (event) => {
+    for(let touch of event.touches) {
+      mouseX = touch.clientX;
+      mouseY = touch.clientY;
+    }
+  });
+
+  document.addEventListener("touchend", () => {
+    clearInterval(intervalID);
   });
 
   document.addEventListener("keydown", (event) => {
